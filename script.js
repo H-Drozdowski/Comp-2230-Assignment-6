@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("trivia-form");
     const questionContainer = document.getElementById("question-container");
     const newPlayerButton = document.getElementById("new-player");
+    const usernameInput = document.getElementById("username")
 
     // Initialize the game
     // checkUsername(); Uncomment once completed
@@ -105,6 +106,13 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
 
         //... form submission logic including setting cookies and calculating score
+        storeUserDataCookie(usernameInput.value.trim())
+        initializeSession()
+    }
+
+    function newPlayer(event){
+        newPlayerButton.classList.add("hidden")
+        usernameInput.classList.remove("hidden")
     }
 });
 
