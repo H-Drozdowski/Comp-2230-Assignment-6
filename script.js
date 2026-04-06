@@ -111,6 +111,10 @@ const storeUserDataCookie = ((userNameEntered) => {
     document.cookie = `username=${userNameEntered}`
 }) 
 
-const retrieveUserDataCookie = ((userNameEntered) => {
-    
+// Returns the username cookie
+const retrieveUserDataCookie = (() => {
+    return document.cookie.split(";")
+    .find((row) => row.startsWith("username"))
+    ?.split("=")[1];
+
 })
