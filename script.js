@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize the game
     // checkUsername(); Uncomment once completed
     fetchQuestions();
-    //displayScores();
+    displayScores();
     initializeSession();
 
     /**
@@ -174,6 +174,16 @@ const calculateUserScore = () => {
 
 const saveUserScore = (username) => {
     playerScore = calculateUserScore()
+    localStorage.setItem(`GameUser_${username}`, playerScore)
+}
 
-    localStorage.setItem(username, playerScore)
+const displayScores = () => {
+    for (let i = 0; i < localStorage.length; i += 1){
+        const key = localStorage.key(i)
+
+        if(key.startsWith("GameUser_")){
+            const score = localStorage.getItem(key)
+            console.log(`${key} ${score}`)
+        }
+    }
 }
