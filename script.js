@@ -9,7 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize the game
     // checkUsername(); Uncomment once completed
     fetchQuestions();
-    displayScores();
+    //displayScores();
+    initializeSession();
 
     /**
      * Fetches trivia questions from the API and displays them.
@@ -102,33 +103,47 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function handleFormSubmit(event) {
         event.preventDefault();
+
         //... form submission logic including setting cookies and calculating score
     }
 });
 
-// Stores user data in cookies
-const storeUserDataCookie = ((userNameEntered) => {
-    document.cookie = `username=${userNameEntered}`
-}) 
+// Stores user data in cookies.
+const storeUserDataCookie = (userNameEntered) => {
+    document.cookie = `username=${userNameEntered}; max-age=${24 * 60 * 60}; path=/`
+}
 
 // Returns the username cookie
-const retrieveUserDataCookie = (() => {
-    return document.cookie.split(";")
-    .find((row) => row.startsWith("username"))
+const retrieveUserDataCookie = () => {
+    return document.cookie.split("; ")
+    .find((row) => row.startsWith("username="))
     ?.split("=")[1];
-})
+}
 
-// Returns true or false based on if the username cookie exists
-const checkForUserCookie = (() => {
+// Returns true or false based on if the username cookie exists.
+const checkForUserCookie = () => {
     let userNameCookie = retrieveUserDataCookie()
-    if (userNameCookie != ""){
+    if (userNameCookie != undefined){
         return true
     }
     else{
         return false
     }
-})
+}
 
-const initializeSession = (() => {
-    
-})
+// Initializes the session based on if the username cookie exists or not.
+const initializeSession = () => {
+    const newPlayerButton = document.getElementById("new-player")
+    const usernameInput = document.getElementById("username")
+
+    // if session exists new player button is not hidden, finish game not hidden
+    if (checkForUserCookie()){
+        newPlayerButton.classList.remove("hidden")
+        usernameInput.classList.add("hidden")
+    }
+    // if session does not exist new player is hidden and finish game and username input is unhidden
+    else{
+        newPlayerButton.classList.add("hidden")
+        usernameInput.classList.remove("hidden")
+    }
+}
