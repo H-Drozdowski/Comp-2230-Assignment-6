@@ -110,6 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         initializeSession()
 
         saveUserScore(retrieveUserDataCookie())
+        displayScores()
     }
 
     function newPlayer(event){
@@ -183,7 +184,27 @@ const displayScores = () => {
 
         if(key.startsWith("GameUser_")){
             const score = localStorage.getItem(key)
-            console.log(`${key} ${score}`)
+            const splitUsername = key.split("GameUser_")
+            let username = splitUsername[1]
+            
+            if (username.trim() === ""){
+                username = "Anonymous Player"
+            }
+            
+            const tableRow = document.createElement("tr")
+
+            const tableNameCell = document.createElement("td")
+            const tableScoreCell = document.createElement("td")
+            tableNameCell.textContent = username
+            tableScoreCell.textContent = score
+
+            tableRow.appendChild(tableNameCell)
+            tableRow.append(tableScoreCell)
+
+            const scoreTable = document.getElementById("score-table")
+            scoreTable.appendChild(tableRow)
+            
+            console.log(`${username} ${score}`)
         }
     }
 }
