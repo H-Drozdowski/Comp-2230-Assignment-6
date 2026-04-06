@@ -155,3 +155,17 @@ const initializeSession = () => {
         usernameInput.classList.remove("hidden")
     }
 }
+
+const calculateUserScore = () => {
+    let userCurrentScore = 0
+
+    const correctAnswers = document.querySelectorAll('input[data-correct]')
+
+    correctAnswers.forEach((answerRadio) => {
+        if (answerRadio.checked){
+            userCurrentScore += 1
+        }
+    })
+
+    return userCurrentScore
+}
