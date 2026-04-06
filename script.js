@@ -105,3 +105,12 @@ document.addEventListener("DOMContentLoaded", function () {
         //... form submission logic including setting cookies and calculating score
     }
 });
+
+// Stores user data in cookies
+const storeUserDataCookie = ((userNameEntered) => {
+    document.cookie = `username=${userNameEntered}`
+}) 
+
+const retrieveUserDataCookie = ((userNameEntered) => {
+    
+})
