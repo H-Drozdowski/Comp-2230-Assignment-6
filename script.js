@@ -108,6 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
         //... form submission logic including setting cookies and calculating score
         storeUserDataCookie(usernameInput.value.trim())
         initializeSession()
+
+        saveUserScore(retrieveUserDataCookie())
     }
 
     function newPlayer(event){
@@ -168,4 +170,10 @@ const calculateUserScore = () => {
     })
 
     return userCurrentScore
+}
+
+const saveUserScore = (username) => {
+    playerScore = calculateUserScore()
+
+    localStorage.setItem(username, playerScore)
 }
