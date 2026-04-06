@@ -111,6 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         saveUserScore(retrieveUserDataCookie())
         displayScores()
+        fetchQuestions()
     }
 
     function newPlayer(event){
@@ -178,7 +179,18 @@ const saveUserScore = (username) => {
     localStorage.setItem(`GameUser_${username}`, playerScore)
 }
 
+const clearOldScores = () => {
+    const scoreRows = document.querySelectorAll(".score-row")
+    
+    scoreRows.forEach((row) => {
+        row.remove()
+    })
+}
+
 const displayScores = () => {
+    const scoreTable = document.getElementById("score-table")
+    clearOldScores()
+
     for (let i = 0; i < localStorage.length; i += 1){
         const key = localStorage.key(i)
 
@@ -201,7 +213,7 @@ const displayScores = () => {
             tableRow.appendChild(tableNameCell)
             tableRow.append(tableScoreCell)
 
-            const scoreTable = document.getElementById("score-table")
+            tableRow.classList.add("score-row")
             scoreTable.appendChild(tableRow)
             
             console.log(`${username} ${score}`)
