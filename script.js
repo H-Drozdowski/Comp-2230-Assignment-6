@@ -116,5 +116,19 @@ const retrieveUserDataCookie = (() => {
     return document.cookie.split(";")
     .find((row) => row.startsWith("username"))
     ?.split("=")[1];
+})
 
+// Returns true or false based on if the username cookie exists
+const checkForUserCookie = (() => {
+    let userNameCookie = retrieveUserDataCookie()
+    if (userNameCookie != ""){
+        return true
+    }
+    else{
+        return false
+    }
+})
+
+const initializeSession = (() => {
+    
 })
