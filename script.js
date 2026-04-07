@@ -5,11 +5,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("trivia-form");
     const questionContainer = document.getElementById("question-container");
     const newPlayerButton = document.getElementById("new-player");
+    const usernameInput = document.getElementById("username")
 
     // Initialize the game
     // checkUsername(); Uncomment once completed
     fetchQuestions();
     displayScores();
+    initializeSession();
 
     /**
      * Fetches trivia questions from the API and displays them.
@@ -102,6 +104,119 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function handleFormSubmit(event) {
         event.preventDefault();
+
         //... form submission logic including setting cookies and calculating score
+        storeUserDataCookie(usernameInput.value.trim())
+        initializeSession()
+
+        saveUserScore(retrieveUserDataCookie())
+        displayScores()
+        fetchQuestions()
+    }
+
+    function newPlayer(event){
+        newPlayerButton.classList.add("hidden")
+        usernameInput.classList.remove("hidden")
     }
 });
+
+// Stores user data in cookies.
+const storeUserDataCookie = (userNameEntered) => {
+    document.cookie = `username=${userNameEntered}; max-age=${24 * 60 * 60}; path=/`
+}
+
+// Returns the username cookie
+const retrieveUserDataCookie = () => {
+    return document.cookie.split("; ")
+    .find((row) => row.startsWith("username="))
+    ?.split("=")[1];
+}
+
+// Returns true or false based on if the username cookie exists.
+const checkForUserCookie = () => {
+    let userNameCookie = retrieveUserDataCookie()
+    if (userNameCookie != undefined){
+        return true
+    }
+    else{
+        return false
+    }
+}
+
+// Initializes the session based on if the username cookie exists or not.
+const initializeSession = () => {
+    const newPlayerButton = document.getElementById("new-player")
+    const usernameInput = document.getElementById("username")
+
+    // if session exists new player button is not hidden, finish game not hidden
+    if (checkForUserCookie()){
+        newPlayerButton.classList.remove("hidden")
+        usernameInput.classList.add("hidden")
+    }
+    // if session does not exist new player is hidden and finish game and username input is unhidden
+    else{
+        newPlayerButton.classList.add("hidden")
+        usernameInput.classList.remove("hidden")
+    }
+}
+
+const calculateUserScore = () => {
+    let userCurrentScore = 0
+
+    const correctAnswers = document.querySelectorAll('input[data-correct]')
+
+    correctAnswers.forEach((answerRadio) => {
+        if (answerRadio.checked){
+            userCurrentScore += 1
+        }
+    })
+
+    return userCurrentScore
+}
+
+const saveUserScore = (username) => {
+    playerScore = calculateUserScore()
+    localStorage.setItem(`GameUser_${username}`, playerScore)
+}
+
+const clearOldScores = () => {
+    const scoreRows = document.querySelectorAll(".score-row")
+    
+    scoreRows.forEach((row) => {
+        row.remove()
+    })
+}
+
+const displayScores = () => {
+    const scoreTable = document.getElementById("score-table")
+    clearOldScores()
+
+    for (let i = 0; i < localStorage.length; i += 1){
+        const key = localStorage.key(i)
+
+        if(key.startsWith("GameUser_")){
+            const score = localStorage.getItem(key)
+            const splitUsername = key.split("GameUser_")
+            let username = splitUsername[1]
+            
+            if (username.trim() === ""){
+                username = "Anonymous Player"
+            }
+            
+            const tableRow = document.createElement("tr")
+
+            const tableNameCell = document.createElement("td")
+            const tableScoreCell = document.createElement("td")
+            tableNameCell.textContent = username
+            tableScoreCell.textContent = score
+
+            tableRow.appendChild(tableNameCell)
+            tableRow.append(tableScoreCell)
+
+            tableRow.classList.add("score-row")
+            scoreTable.appendChild(tableRow)
+            
+            console.log(`${username} ${score}`)
+        }
+    }
+}
